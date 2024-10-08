@@ -3,15 +3,22 @@ import networkx as nx
 # Crear el grafo de estaciones y rutas
 G = nx.Graph()
 
-# Agregar nodos (Estaciones)
-G.add_nodes_from(["Estación A", "Estación B", "Estación C", "Estación D"])
+# Agregar nodos (Estaciones en un sector de Bogotá)
+G.add_nodes_from([
+    "Portal de la 80", "Avenida Cali", "Carrera 68",
+    "Estadio El Campín", "Universidad Nacional",
+    "Centro Internacional", "Las Aguas"
+])
 
 # Agregar aristas (Rutas) con pesos (Distancias en minutos)
-G.add_edge("Estación A", "Estación B", weight=5)
-G.add_edge("Estación A", "Estación C", weight=10)
-G.add_edge("Estación B", "Estación C", weight=2)
-G.add_edge("Estación B", "Estación D", weight=7)
-G.add_edge("Estación C", "Estación D", weight=3)
+G.add_edge("Portal de la 80", "Avenida Cali", weight=10)
+G.add_edge("Avenida Cali", "Carrera 68", weight=8)
+G.add_edge("Carrera 68", "Estadio El Campín", weight=7)
+G.add_edge("Estadio El Campín", "Universidad Nacional", weight=5)
+G.add_edge("Universidad Nacional", "Centro Internacional", weight=6)
+G.add_edge("Centro Internacional", "Las Aguas", weight=4)
+G.add_edge("Portal de la 80", "Universidad Nacional", weight=20)
+G.add_edge("Carrera 68", "Centro Internacional", weight=12)
 
 # Definir base de conocimiento (reglas)
 
@@ -38,8 +45,9 @@ def aplicar_reglas_logicas(G, origen, destino):
     return subgrafo
 
 
-estacion_origen = "Estación B"
-estacion_destino = "Estación C"
+# Estaciones de prueba para el sector de Bogotá
+estacion_origen = "Portal de la 80"
+estacion_destino = "Las Aguas"
 
 # Crear un subgrafo basado en las reglas lógicas
 subgrafo_filtrado = aplicar_reglas_logicas(
