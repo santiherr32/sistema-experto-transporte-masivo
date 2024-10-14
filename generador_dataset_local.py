@@ -74,5 +74,5 @@ data["Cantidad_de_Pasajeros"] = (
 df = pd.DataFrame(data)
 
 # Guardar el nuevo dataset simulado en un archivo CSV
-df.to_csv("dataset_transporte_simulado.csv", index=False)
-print(f"Archivo dataset_transporte_simulado.csv guardado con {DATA_LENGTH} registros")
+df.to_csv(DATASET_TRANSPORTE, index=False)
+print(f"Archivo {DATASET_TRANSPORTE} guardado con {DATA_LENGTH} registros")

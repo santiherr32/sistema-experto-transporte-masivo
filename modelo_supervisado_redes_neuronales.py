@@ -3,14 +3,13 @@ from datetime import datetime
 from fpdf import FPDF
 from PyPDF2 import PdfReader, PdfWriter
 import pandas as pd
-import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from tensorflow import keras
-from constants import MAX_PASSENGERS_AMOUNT
+from constants import *
 
 # Cargar el dataset
-df = pd.read_csv("dataset_transporte_simulado.csv")
+df = pd.read_csv(DATASET_TRANSPORTE)
 print(f"El dataset contiene {len(df)} registros")
 
 # Convertir variables categóricas en numéricas usando LabelEncoder
@@ -38,8 +37,8 @@ df = df.drop(
 
 # Calcular la matriz de correlación
 correlation_matrix = df.corr()
-
 # Mostrar la correlación con la variable objetivo 'Cantidad_de_Pasajeros' de las variables incluidas
+print("Matriz de correlación con la variable 'Cantidad_de_Pasajeros': ")
 print(correlation_matrix["Cantidad_de_Pasajeros"])
 
 # Separar características y variable objetivo
@@ -99,16 +98,14 @@ import os
 from PyPDF2 import PdfReader, PdfWriter
 
 # Archivos de resultados y conteo
-pdf_filename = "resultados_redes_neuronales.pdf"
-count_filename = "conteo_pruebas.txt"
 
 # Verificar si los archivos PDF y de conteo existen y si no, iniciar desde cero
-if not os.path.exists(pdf_filename) and not os.path.exists(count_filename):
+if not os.path.exists(PDF_FILENAME) and not os.path.exists(COUNT_FILENAME):
     num_pruebas = 0  # Si no existen, comenzar desde la primera prueba
 else:
     # Verificar si el archivo de conteo existe y leer el número de pruebas
-    if os.path.exists(count_filename):
-        with open(count_filename, "r") as f:
+    if os.path.exists(COUNT_FILENAME):
+        with open(COUNT_FILENAME, "r") as f:
             num_pruebas = int(f.read().strip())
     else:
         num_pruebas = 0
@@ -117,7 +114,7 @@ else:
 num_pruebas += 1
 
 # Guardar el nuevo número de pruebas en el archivo de conteo
-with open(count_filename, "w") as f:
+with open(COUNT_FILENAME, "w") as f:
     f.write(str(num_pruebas))
 
 # Crear un nuevo PDF para la prueba actual
@@ -137,12 +134,12 @@ pdf.cell(200, 10, txt=f"MAE Validación: {mae_val}", ln=True)
 pdf.cell(200, 10, txt=f"MAE Prueba: {test_mae}", ln=True)
 
 # Guardar el PDF de la prueba actual en un archivo temporal
-new_pdf_filename = "nuevo_bloque_prueba.pdf"
-pdf.output(new_pdf_filename)
+new_PDF_FILENAME = "nuevo_bloque_prueba.pdf"
+pdf.output(new_PDF_FILENAME)
 
 # Si el PDF principal ya existe, combinarlo con el nuevo bloque
-if os.path.exists(pdf_filename):
-    reader = PdfReader(pdf_filename)
+if os.path.exists(PDF_FILENAME):
+    reader = PdfReader(PDF_FILENAME)
     writer = PdfWriter()
 
     # Copiar todas las páginas del PDF existente
@@ -150,18 +147,18 @@ if os.path.exists(pdf_filename):
         writer.add_page(reader.pages[page_num])
 
     # Añadir la nueva página con la prueba actual
-    new_pdf = PdfReader(new_pdf_filename)
+    new_pdf = PdfReader(new_PDF_FILENAME)
     writer.add_page(new_pdf.pages[0])
 
     # Guardar el archivo combinado
-    with open(pdf_filename, "wb") as output_pdf:
+    with open(PDF_FILENAME, "wb") as output_pdf:
         writer.write(output_pdf)
 
     # Eliminar el archivo temporal
-    os.remove(new_pdf_filename)
+    os.remove(new_PDF_FILENAME)
 
 else:
     # Si no existe el PDF, renombrar el nuevo PDF como el archivo principal
-    os.rename(new_pdf_filename, pdf_filename)
+    os.rename(new_PDF_FILENAME, PDF_FILENAME)
 
-print(f"Resultados guardados en '{pdf_filename}'")
+print(f"Resultados guardados en '{PDF_FILENAME}'")
